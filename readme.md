@@ -14,9 +14,9 @@
 
 `/docs/index.html` 是演示站 <https://bduss.ailand.date> 的源码，要直接使用需要修改或者删除下述几项
 
-- `L82` 及 `L83` Google analytics 相关
-- `L98` api地址
-- \* 使用php需要修改 `L99` 的 `workersMode` 至 `false`
+- `L83` 及 `L84` Google analytics 相关
+- `L99` api地址
+- \* 使用php需要修改 `L100` 的 `workersMode` 至 `false`
 
 ## 环境要求
 

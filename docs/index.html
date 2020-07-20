@@ -15,7 +15,7 @@
         <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js"></script>
     </head>
     <body>
-        <div id="getbduss">
+        <div id="app">
             <div class="container">
                 <div class="col-md-6 offset-md-3">
                     <div class="alert alert-info" role="alert" v-if="$route.params.callbackURL">
@@ -71,6 +71,7 @@
                                 <li>可直接点击 "网页授权" 并在新打开页授权，无需客户端扫码</li>
 				                <li>本站使用Google Analytics</li>
                                 <li>打开百度页面时请使用移动设备或将浏览器ua设置为移动设备的ua</li>
+                                <li>本页 <a href="https://github.com/BANKA2017/get-bduss">GitHub 仓库</a></li>
                             </ul>
                         </div>
                     </div>
@@ -86,7 +87,7 @@
         <script>
             'use strict';
             new Vue({
-                el: '#getbduss',
+                el: '#app',
                 data: {
                     qrCodeUrl: "",
                     sign: "",
@@ -95,7 +96,7 @@
                     status: 1,
                     btnType: true,
                     copy: false,
-                    api: "https://bduss.ailand.date/api",
+                    api: "https://api.ailand.date/baidu/bduss/v2",
                     workersMode: true
                 },
                 router: new VueRouter({
@@ -150,7 +151,7 @@
                         });
                     },
                     regex: function(url){
-                        return atob(url).replace(/(?:http|https):\/\/([^\/\?#]+).*/, `$1`);
+                        return (new URL(atob(url))).host
                     },
                     success: function(){
                         return 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" role="img" version="1.1" x="0px" y="0px" width="36px" height="36px"><circle fill="#3C76FF" cx="18" cy="18" r="18" /><path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10.45,17.167l6,5.75 L10.45,17.167z" /><path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16.45,22.917l11-10 L16.45,22.917z" /></svg>');
