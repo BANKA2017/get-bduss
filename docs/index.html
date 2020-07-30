@@ -97,7 +97,6 @@
                     btnType: true,
                     copy: false,
                     api: "https://api.ailand.date/baidu/bduss/v2",
-                    workersMode: true
                 },
                 router: new VueRouter({
                     routes: [
@@ -123,7 +122,7 @@
                         this.status = 1;
                         this.bduss = this.sign = this.qrCodeUrl ="";
                         this.loading = this.btnType =true;
-                        axios.get(this.api + (this.workersMode ? '/getqrcode' : '/api.php?m=getqrcode')).then(response => {
+                        axios.get(this.api + '/?m=getqrcode').then(response => {
                             this.qrCodeUrl = response.data.data.imgurl;
                             this.sign = response.data.data.sign;
                             this.loading = false;
@@ -135,7 +134,7 @@
                         });
                     },
                     req: function(){
-                        axios.get(this.api + (this.workersMode ? '/getbduss/'+this.sign : '/api.php?m=getbduss&sign=' + this.sign)).then(response => {
+                        axios.get(this.api + '/?m=getbduss&sign=' + this.sign).then(response => {
                             //-1 更换二维码
                             //0 进入下一步
                             //1 无需操作

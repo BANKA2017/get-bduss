@@ -1,7 +1,8 @@
 'use strict'
 //const ORIGIN = ''//Environment Variables
-const PATH = ''//for route
+const AllowedReferrer = ''// 'a.com|b.com|c.com' multiple domains is supported
 const init = {
+  status: 403,
   headers: {
     'content-type': 'application/json;charset=UTF-8',
     'access-control-allow-origin': (typeof ORIGIN !== 'undefined') ? ORIGIN : '*',
@@ -16,31 +17,35 @@ addEventListener('fetch', event => {
 })
 
 async function switchRouter(url) {
-  const parsePath = (new URL(url)).pathname.replace(PATH, '').substr(1).split('/')
+  const parseUrl = new URL(url)
+  const _searchParams = parseUrl.searchParams
   let resp = {
     "errno": -1,
     "msg": "Forbidden",
     "data": []
   }
-  switch (parsePath[0]) {
-    case "getqrcode":
-      resp.data = await getqrcode()
-      if (resp.data.sign) {
-        resp.errno = 0
-        resp.msg = "Success"
-      }
-      break
-    case "getbduss":
-      resp.data = await getBduss(parsePath[1])
-      if (!!resp.data.status === !!resp.data.bduss.length) {
-        resp.errno = 0
-        resp.msg = "Success"
-      } else {
-        resp.msg = "Invalid QR Code or timeout"
-      }
-      break
+  if (AllowedReferrer === '' || RegExp('(^|\.)(' + AllowedReferrer + ')$').test(parseUrl.host)) {
+    init.status = 200
+    switch (_searchParams.get("m")) {
+      case "getqrcode":
+        resp.data = await getqrcode()
+        if (resp.data.sign) {
+          resp.errno = 0
+          resp.msg = "Success"
+        }
+        break
+      case "getbduss":
+        resp.data = await getBduss(_searchParams.get("sign"))
+        if (!!resp.data.status === !!resp.data.bduss.length) {
+          resp.errno = 0
+          resp.msg = "Success"
+        } else {
+          resp.msg = "Invalid QR Code or timeout"
+        }
+        break
+    }
   }
-
+  
   return new Response(JSON.stringify(resp), init)
 }
 
@@ -52,7 +57,7 @@ async function getqrcode() {
 async function getBduss(sign) {
   let resp = { status: 1, bduss: "", msg: "" }
   let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=")).text()
-  if (response) {
+  if (typeof response !== 'undefined' ? response.length : false) {
     const errno = parseInt(/"errno":([\-0-9]+)(?:,|})/.exec(response)[1])
     if (errno === 0) {
         const channel_v = JSON.parse(/"channel_v":"(.*)"}\)/.exec(response)[1].replace(/\\/gm, ''))

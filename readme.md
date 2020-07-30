@@ -5,6 +5,7 @@
 在 <https://workers.cloudflare.com> 新建一个workers，将 `workers.js` 的内容复制粘贴就完成了
 
 - 可以设置环境变量或者取消注释设置 `ORIGIN`
+- 可以设置环境变量或者取消注释设置 `AllowedReferrer`
 
 ## php
 
@@ -16,7 +17,6 @@
 
 - `L83` 及 `L84` Google analytics 相关
 - `L99` api地址
-- \* 使用php需要修改 `L100` 的 `workersMode` 至 `false`
 
 ## 环境要求
 
