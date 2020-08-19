@@ -68,7 +68,7 @@ class getBDUSS{
                     $r["status"] = 0;
                     $r["msg"] = "Continue";
                 }else{
-                    $s_bduss = json_decode(preg_replace("/'([^'']+)'/", '"$1"', str_replace("\\&", "\\\\&", self::scurl('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss='.$channel_v["v"], 10))), true);
+                    $s_bduss = json_decode(preg_replace("/'([^'']+)'/", '"$1"', str_replace("\\&", "&", self::scurl('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss='.$channel_v["v"], 10))), true);
                     if ($s_bduss && $s_bduss["code"] === "110000") {
                         $r["status"] = 2;
                         $r["msg"] = "Success";

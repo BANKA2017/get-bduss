@@ -66,7 +66,7 @@ async function getBduss(sign, full = false) {
           resp.status = 0
           resp.msg = "Continue"
         } else {
-          const userData = await JSON.parse(((await (await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss=' + channel_v.v)).text()).replace(/'([^'']+)'/gm, `"$1"`)).replace(/\\&/gm, "\\\\&"))
+          const userData = await JSON.parse(((await (await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss=' + channel_v.v)).text()).replace(/'([^'']+)'/gm, `"$1"`)).replace(/\\&/gm, "&"))
           if (userData && userData.code === "110000") {
             resp.status = 2
             resp.msg = "Success"

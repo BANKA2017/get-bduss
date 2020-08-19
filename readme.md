@@ -14,7 +14,7 @@
 
 ## 示例
 
-`/index.html` 是演示站 <https://bduss.ailand.date> 的源码，要直接使用需要修改或者删除下述几项
+`/index.html` 是演示站 <https://bduss.ailand.date> 的源码，要直接使用需要修改或删除下述几项
 
 - `L84` 及 `L85` Google analytics 相关
 - `L103` api地址
