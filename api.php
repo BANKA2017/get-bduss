@@ -2,10 +2,9 @@
 /* KDboT
  * @banka2017 & KD·NETWORK
  */
-
-//$origin = "";
+$origin = "";
 header('content-type: application/json;charset=UTF-8');
-header('access-control-allow-origin: '. (isset($origin)) ? $origin : '*');
+header('access-control-allow-origin: '. ($origin ? $origin : '*'));
 header('access-control-allow-methods: GET');
 header('X-XSS-Protection: 1; mode=block');
 header('X-Frame-Options: sameorigin');
@@ -36,12 +35,10 @@ if (isset($get["m"])) {
 echo json_encode($r, JSON_UNESCAPED_UNICODE);
 
 class getBDUSS{
-    private function scurl (string $url = "localhost", int $timeout = 60, bool $headOnly = false) :string {
+    private function scurl (string $url = "localhost", int $timeout = 60) :string {
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL, $url);
         curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36');
-        curl_setopt($ch,CURLOPT_HEADER, $headOnly);
-        curl_setopt($ch,CURLOPT_NOBODY, $headOnly);
         curl_setopt($ch,CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
         return curl_exec($ch);
@@ -71,11 +68,11 @@ class getBDUSS{
                     $r["status"] = 0;
                     $r["msg"] = "Continue";
                 }else{
-                    $s_bduss = self::scurl('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss='.$channel_v["v"], 10, true);
-                    if (preg_match('/BDUSS=([\w\-~=]+);/', $s_bduss, $bduss)) {
+                    $s_bduss = json_decode(preg_replace("/'([^'']+)'/", '"$1"', str_replace("\\&", "\\\\&", self::scurl('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss='.$channel_v["v"], 10))), true);
+                    if ($s_bduss && $s_bduss["code"] === "110000") {
                         $r["status"] = 2;
                         $r["msg"] = "Success";
-                        $r["bduss"] = $bduss[1];
+                        $r["bduss"] = $s_bduss["data"]["session"]["bduss"];
                     }
                 }
             }else{

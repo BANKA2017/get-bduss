@@ -17,7 +17,8 @@
     <body>
         <div id="app">
             <div class="container">
-                <div class="col-md-6 offset-md-3">
+                <div class="col-md-8 offset-md-2">
+                    <div class="my-4"></div>
                     <div class="alert alert-info" role="alert" v-if="$route.params.callbackURL">
                         将跳转到: <a :href="`//`+regex($route.params.callbackURL)" class="alert-link">{{ regex($route.params.callbackURL) }}</a>
                     </div>
@@ -71,7 +72,7 @@
                                 <li>可直接点击 "网页授权" 并在新打开页授权，无需客户端扫码</li>
 				                <li>本站使用Google Analytics</li>
                                 <li>打开百度页面时请使用移动设备或将浏览器ua设置为移动设备的ua</li>
-                                <li>本页 <a href="https://github.com/BANKA2017/get-bduss">GitHub 仓库</a></li>
+                                <li>本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank">GitHub 仓库</a></li>
                             </ul>
                         </div>
                     </div>
@@ -86,6 +87,9 @@
 	<script src="https://cdn.jsdelivr.net/npm/cfga@1.0.3" async></script>
         <script>
             'use strict';
+            let cancel
+            let CancelToken
+            CancelToken = axios.CancelToken
             new Vue({
                 el: '#app',
                 data: {
@@ -96,7 +100,7 @@
                     status: 1,
                     btnType: true,
                     copy: false,
-                    api: "https://api.ailand.date/baidu/bduss/v2",
+                    api: "https://api.ailand.date/baidu/bduss/v2/",
                 },
                 router: new VueRouter({
                     routes: [
@@ -118,11 +122,18 @@
                 },
                 methods: {
                     init: function(){
+                        if(cancel) {
+                            cancel()
+                        }
                         this.loading = true;
                         this.status = 1;
-                        this.bduss = this.sign = this.qrCodeUrl ="";
+                        this.bduss = this.sign = this.qrCodeUrl = "";
                         this.loading = this.btnType =true;
-                        axios.get(this.api + '/?m=getqrcode').then(response => {
+                        axios.get(this.api + '?m=getqrcode', {
+                            cancelToken: new CancelToken(function executor(c) {
+                                cancel = c
+                            })
+                        }).then(response => {
                             this.qrCodeUrl = response.data.data.imgurl;
                             this.sign = response.data.data.sign;
                             this.loading = false;
@@ -134,7 +145,14 @@
                         });
                     },
                     req: function(){
-                        axios.get(this.api + '/?m=getbduss&sign=' + this.sign).then(response => {
+                        if(cancel) {
+                            cancel()
+                        }
+                        axios.get(this.api + '?m=getbduss&sign=' + this.sign + "", {
+                            cancelToken: new CancelToken(function executor(c) {
+                                cancel = c
+                            })
+                        }).then(response => {
                             //-1 更换二维码
                             //0 进入下一步
                             //1 无需操作

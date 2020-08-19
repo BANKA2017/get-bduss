@@ -1,6 +1,7 @@
 'use strict'
 //const ORIGIN = ''//Environment Variables
 const AllowedReferrer = ''// 'a.com|b.com|c.com' multiple domains is supported
+const FULLMODE = false
 const init = {
   status: 403,
   headers: {
@@ -35,7 +36,7 @@ async function switchRouter(url) {
         }
         break
       case "getbduss":
-        resp.data = await getBduss(_searchParams.get("sign"))
+        resp.data = await getBduss(_searchParams.get("sign"), (_searchParams.get("full") === null ? false : true))
         if (!!resp.data.status === !!resp.data.bduss.length) {
           resp.errno = 0
           resp.msg = "Success"
@@ -54,7 +55,7 @@ async function getqrcode() {
   return { sign: response.sign, imgurl: response.imgurl }
 }
 
-async function getBduss(sign) {
+async function getBduss(sign, full = false) {
   let resp = { status: 1, bduss: "", msg: "" }
   let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=")).text()
   if (typeof response !== 'undefined' ? response.length : false) {
@@ -65,11 +66,14 @@ async function getBduss(sign) {
           resp.status = 0
           resp.msg = "Continue"
         } else {
-          const cookies = ((await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss=' + channel_v.v)).headers.get("set-cookie")).toString()
-          if (/BDUSS=([\w\-~=]+);/.test(cookies)) {
+          const userData = await JSON.parse(((await (await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss=' + channel_v.v)).text()).replace(/'([^'']+)'/gm, `"$1"`)).replace(/\\&/gm, "\\\\&"))
+          if (userData && userData.code === "110000") {
             resp.status = 2
             resp.msg = "Success"
-            resp.bduss = /BDUSS=([\w\-~=]+);/.exec(cookies)[1]
+            resp.bduss = await userData.data.session.bduss
+            if (full && FULLMODE) {
+              resp.data = await userData.data
+            }
           }
         }
     } else {

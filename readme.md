@@ -6,17 +6,18 @@
 
 - 可以设置环境变量或者取消注释设置 `ORIGIN`
 - 可以设置环境变量或者取消注释设置 `AllowedReferrer`
+- `FULLMODE` 常量开启后导致的任何后果与本人无关
 
 ## php
 
-- 可以取消注释设置 `$origin`
+- 可以设置 `$origin`
 
 ## 示例
 
-`/docs/index.html` 是演示站 <https://bduss.ailand.date> 的源码，要直接使用需要修改或者删除下述几项
+`/index.html` 是演示站 <https://bduss.ailand.date> 的源码，要直接使用需要修改或者删除下述几项
 
-- `L83` 及 `L84` Google analytics 相关
-- `L99` api地址
+- `L84` 及 `L85` Google analytics 相关
+- `L103` api地址
 
 ## 环境要求
 
