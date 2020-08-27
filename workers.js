@@ -1,7 +1,6 @@
 'use strict'
 //const ORIGIN = ''//Environment Variables
 const AllowedReferrer = ''// 'a.com|b.com|c.com' multiple domains is supported
-const FULLMODE = false
 const init = {
   status: 403,
   headers: {
@@ -56,7 +55,7 @@ async function getqrcode() {
 }
 
 async function getBduss(sign, full = false) {
-  let resp = { status: 1, bduss: "", msg: "" }
+  let resp = { status: 1, bduss: "", msg: "", fullmode: false}
   let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=")).text()
   if (typeof response !== 'undefined' ? response.length : false) {
     const errno = parseInt(/"errno":([\-0-9]+)(?:,|})/.exec(response)[1])
@@ -71,8 +70,19 @@ async function getBduss(sign, full = false) {
             resp.status = 2
             resp.msg = "Success"
             resp.bduss = await userData.data.session.bduss
-            if (full && FULLMODE) {
-              resp.data = await userData.data
+            if (full) {
+              resp.fullmode = true
+              let fullModeData = {}
+              fullModeData.ptoken = await userData.data.session.ptoken
+              fullModeData.stoken = await userData.data.session.stoken
+              fullModeData.ubi = await userData.data.session.ubi
+              fullModeData.hao123Param = await userData.data.hao123Param
+              fullModeData.username = await userData.data.user.username
+              fullModeData.userId = await userData.data.user.userId
+              fullModeData.portraitSign = await userData.data.user.portraitSign
+              fullModeData.displayName = await userData.data.user.displayName
+              fullModeData.stokenList = parseStoken(await userData.data.session.stokenList)
+              resp.data = fullModeData
             }
           }
         }
@@ -84,4 +94,13 @@ async function getBduss(sign, full = false) {
     resp.msg = "Invalid QR Code"
   }
   return resp
+}
+
+function parseStoken (stokenList) {
+  let tmpStokenList = {}
+  JSON.parse(stokenList.replace(/&quot;/gm, '"')).map(x => {
+    let tmpX = x.split('#')
+    tmpStokenList[tmpX[0]] = tmpX[1]
+  })
+  return tmpStokenList
 }

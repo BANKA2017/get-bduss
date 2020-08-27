@@ -21,7 +21,7 @@ if (isset($get["m"])) {
             break;
         case "getbduss":
             if(isset($get["sign"]) && $get["sign"] != ""){
-                $r["data"] = getBDUSS::get_real_bduss($get["sign"]);
+                $r["data"] = getBDUSS::get_real_bduss($get["sign"], isset($get["full"]));
                 if($r["data"]){
                     $r["errno"] = 0;
                     $r["msg"] = "Success";
@@ -51,14 +51,14 @@ class getBDUSS{
         }
         return $resp;
     }
-    public function get_real_bduss(string $sign) :array{
+    public function get_real_bduss(string $sign, bool $full) :array{
         //status code
         //errno不等于0或1时需要要求更换二维码及sign
         //-1 更换二维码
         //0 进入下一步
         //1 无需操作
         //2 已确认
-        $r = ["status" => 1, "bduss" => "", "msg" => ""];
+        $r = ["status" => 1, "bduss" => "", "msg" => "", "fullmode" => false];
         $response = self::scurl("https://passport.baidu.com/channel/unicast?channel_id={$sign}&callback=", 35);
         if ($response) {
             $responseParse = json_decode(str_replace(array("(",")"),'',$response),true);
@@ -73,6 +73,20 @@ class getBDUSS{
                         $r["status"] = 2;
                         $r["msg"] = "Success";
                         $r["bduss"] = $s_bduss["data"]["session"]["bduss"];
+                        if ($full) {
+                            $r["fullmode"] = true;
+                            $fullModeData = [];
+                            $fullModeData["ptoken"] = $s_bduss["data"]["session"]["ptoken"];
+                            $fullModeData["stoken"] = $s_bduss["data"]["session"]["stoken"];
+                            $fullModeData["ubi"] = $s_bduss["data"]["session"]["ubi"];
+                            $fullModeData["hao123Param"] = $s_bduss["data"]["hao123Param"];
+                            $fullModeData["username"] = $s_bduss["data"]["user"]["username"];
+                            $fullModeData["userId"] = $s_bduss["data"]["user"]["userId"];
+                            $fullModeData["portraitSign"] = $s_bduss["data"]["user"]["portraitSign"];
+                            $fullModeData["displayName"] = $s_bduss["data"]["user"]["displayName"];
+                            $fullModeData["stokenList"] = self::parseStoken($s_bduss["data"]["session"]["stokenList"]);
+                            $r["data"] = $fullModeData;
+                          }
                     }
                 }
             }else{
@@ -84,4 +98,12 @@ class getBDUSS{
         }
         return $r;
     }
+    public function parseStoken (string $stokenList) {
+        $tmpStokenList = [];
+        foreach (json_decode(str_replace("&quot;", '"', $stokenList), true) as $stoken) {
+            preg_match("/([\w]+)#(.*)/", $stoken, $tmpStoken);
+            $tmpStokenList[$tmpStoken[1]] = $tmpStoken[2];
+        }
+        return $tmpStokenList;
+      }
 }
