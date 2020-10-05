@@ -136,11 +136,9 @@
                 mounted: function() {
                     new ClipboardJS('#copy');
                     this.init();
-                    
                 },
                 watch: {
                     "status": function () {
-                        console.log(this.status)
                         if(this.status === 2 && this.bduss && this.$route.params.callbackURL){
                             setTimeout(() => {window.location.replace(atob(this.$route.params.callbackURL) + '&bduss=' + this.bduss)}, 5000);
                         }
@@ -204,7 +202,7 @@
                         });
                     },
                     host: function(url){
-                        return (new URL(atob(url))).host
+                        return (new URL(atob(decodeURI(url)))).host
                     },
                     success: function(){
                         return 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" role="img" version="1.1" x="0px" y="0px" width="36px" height="36px"><circle fill="#3C76FF" cx="18" cy="18" r="18" /><path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10.45,17.167l6,5.75 L10.45,17.167z" /><path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16.45,22.917l11-10 L16.45,22.917z" /></svg>');
