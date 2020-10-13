@@ -20,7 +20,7 @@
                 <div class="col-md-8 offset-md-2">
                     <div class="my-4"></div>
                     <div class="alert alert-info" role="alert" v-if="$route.params.callbackURL">
-                        将跳转到: <a :href="`//`+host($route.params.callbackURL)" class="alert-link">{{ host($route.params.callbackURL) }}</a>
+                        将跳转到: <a :href="parseURI().origin" class="alert-link">{{ parseURI().host }}</a>
                     </div>
                     <div class="card text-center" v-if="[0, 1].indexOf(status) !== -1">
                         <div class="card-body">
@@ -44,15 +44,16 @@
                     <template v-else>
                         <div :class="`card text-center `+(status==2 ? 'border-success' : 'border-danger' )">
                             <div class="card-body">
-                                <div v-if="bduss">
+                                <div v-if="bduss && $route.params.callbackURL">
+                                    <h1 class="display-1 text-center">{{ etaTimes }}</h1>
+                                </div>
+                                <div v-else-if="bduss">
                                     <h3>BDUSS获取成功</h3>
                                     <div class="my-4"></div>
-                                    <div v-if="status">
-                                        <div class="input-group input-group-lg">
-                                            <input type="text" :value="bduss" aria-label="Large" class="form-control" aria-describedby="copied">
-                                            <div class="input-group-append">
-                                                <button :class="`btn btn-outline-secondary` + (copied === 'bduss' ? ' active' : '')" type="button" id="copy" :data-clipboard-text="bduss" @click="copied = 'bduss'">{{ copied === 'bduss' ? '已复制' : '复制' }}</button>
-                                            </div>
+                                    <div class="input-group input-group-lg">
+                                        <input type="text" :value="bduss" aria-label="Large" class="form-control" aria-describedby="copied">
+                                        <div class="input-group-append">
+                                            <button :class="`btn btn-outline-secondary` + (copied === 'bduss' ? ' active' : '')" type="button" id="copy" :data-clipboard-text="bduss" @click="copied = 'bduss'">{{ copied === 'bduss' ? '已复制' : '复制' }}</button>
                                         </div>
                                     </div>
                                     <div class="my-4"></div>
@@ -120,6 +121,7 @@
                     bduss: "",
                     loading: true,
                     status: 1,
+                    etaTimes: 5,
                     btnType: true,
                     copied: '',
                     fullMode: false,
@@ -140,7 +142,7 @@
                 watch: {
                     "status": function () {
                         if(this.status === 2 && this.bduss && this.$route.params.callbackURL){
-                            setTimeout(() => {window.location.replace(atob(this.$route.params.callbackURL) + '&bduss=' + this.bduss)}, 5000);
+                            this.eta((new Date()).getTime() + 5000)//5s
                         }
                     },
                     "fullMode": function () {
@@ -201,8 +203,17 @@
                             }
                         });
                     },
-                    host: function(url){
-                        return (new URL(atob(decodeURI(url)))).host
+                    parseURI: function () {
+                        return new URL(atob(decodeURI(this.$route.params.callbackURL)))
+                    },
+                    eta: function(endTime) {
+                        let now = new Date
+                        if (now < endTime) {
+                            this.etaTimes = Math.floor((endTime - now)/1000)
+                            setTimeout(() => this.eta(endTime), 200);
+                        } else {
+                            window.location.replace(atob(this.$route.params.callbackURL) + (this.parseURI().search ? '&' : '?') + 'bduss=' + this.bduss)
+                        }
                     },
                     success: function(){
                         return 'data:image/svg+xml;base64,' + btoa('<svg xmlns="http://www.w3.org/2000/svg" role="img" version="1.1" x="0px" y="0px" width="36px" height="36px"><circle fill="#3C76FF" cx="18" cy="18" r="18" /><path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10.45,17.167l6,5.75 L10.45,17.167z" /><path fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16.45,22.917l11-10 L16.45,22.917z" /></svg>');
