@@ -56,7 +56,7 @@ async function getqrcode() {
 
 async function getBduss(sign, full = false) {
   let resp = { status: 1, bduss: "", msg: "", fullmode: false}
-  let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=")).text()
+  let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=a")).text()
   if (typeof response !== 'undefined' ? response.length : false) {
     const errno = parseInt(/"errno":([\-0-9]+)(?:,|})/.exec(response)[1])
     if (errno === 0) {
