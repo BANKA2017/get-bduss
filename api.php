@@ -99,7 +99,7 @@ class getBDUSS{
         }
         return $r;
     }
-    public function parseStoken (string $stokenList) {
+    public static function parseStoken (string $stokenList) {
         $tmpStokenList = [];
         foreach (json_decode(str_replace("&quot;", '"', $stokenList), true) as $stoken) {
             preg_match("/([\w]+)#(.*)/", $stoken, $tmpStoken);
