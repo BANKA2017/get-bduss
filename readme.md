@@ -15,8 +15,8 @@
 
 `/index.html` 是演示站 <https://bduss.nest.moe> 的源码，要直接使用需要修改或删除下述几项
 
-- `L107` 及 `L108` Google analytics 相关
-- `L129` api地址
+- `L108` 及 `L109` Google analytics 相关
+- `L115` api地址
 
 ## 环境要求
 
