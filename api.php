@@ -39,7 +39,7 @@ class getBDUSS{
     private static function scurl (string $url = "localhost", int $timeout = 60) :string {
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL, $url);
-        curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36');
+        curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36');
         curl_setopt($ch,CURLOPT_TIMEOUT, $timeout);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
         return curl_exec($ch);

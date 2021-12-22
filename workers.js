@@ -12,6 +12,10 @@ const init = {
   },
 }
 
+const globalHeaders = new Headers({
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+})
+
 addEventListener('fetch', event => {
   return event.respondWith(switchRouter(event.request.url, event))
 })
@@ -50,13 +54,13 @@ async function switchRouter(url) {
 }
 
 async function getqrcode() {
-  const response = await (await fetch("https://passport.baidu.com/v2/api/getqrcode?lp=pc")).json()
+  const response = await (await fetch("https://passport.baidu.com/v2/api/getqrcode?lp=pc", {headers: globalHeaders})).json()
   return { sign: response.sign, imgurl: response.imgurl }
 }
 
 async function getBduss(sign, full = false) {
   let resp = { status: 1, bduss: "", msg: "", fullmode: false}
-  let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=a")).text()
+  let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=a", {headers: globalHeaders})).text()
   if (typeof response !== 'undefined' ? response.length : false) {
     const errno = parseInt(/"errno":([\-0-9]+)(?:,|})/.exec(response)[1])
     if (errno === 0) {
@@ -65,7 +69,7 @@ async function getBduss(sign, full = false) {
           resp.status = 0
           resp.msg = "Continue"
         } else {
-          const userData = await JSON.parse(((await (await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss=' + channel_v.v)).text()).replace(/'([^'']+)'/gm, `"$1"`)).replace(/\\&/gm, "&"))
+          const userData = await JSON.parse(((await (await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss=' + channel_v.v, {headers: globalHeaders})).text()).replace(/'([^'']+)'/gm, `"$1"`)).replace(/\\&/gm, "&"))
           if (userData && userData.code === "110000") {
             resp.status = 2
             resp.msg = "Success"

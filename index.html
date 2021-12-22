@@ -10,7 +10,7 @@
   <meta name="description" content="扫码登录获取BDUSS">
   <meta name="keywords" content="百度,登录,百度登录,BDUSS,BDUSS在线获取">
   <title>扫码登录获取BDUSS</title>
-  <link rel="stylesheet" href="https://unpkg.com/@geist-ui/style@2.0.0/dist/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@geist-ui/style@latest/dist/style.css">
   <style>
     .block {
       display: block;
@@ -108,7 +108,7 @@
     window.ga_tid = "UA-90617066-7";
     window.ga_api = "https://ga.nest.moe";
   </script>
-  <script src="https://unpkg.com/cfga@1.0.3/cfga.min.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/cfga@1.0.3" async></script>
   <script>
     'use strict';
 
@@ -132,7 +132,7 @@
 
     let controller = {
       qrcode: new AbortController(),
-      bduss: new AbortController(),
+      bduss: [new AbortController()],
     }
     const init = () => {
       switchActiveStatus("card-loading")
@@ -162,11 +162,11 @@
       if (status > 1 || status < -1) {
         return
       }
-      controller.bduss.abort()
-      controller.bduss = new AbortController()
+      controller.bduss[controller.bduss.length - 1].abort()
+      controller.bduss.push(new AbortController())
       //get status
       fetch(api + '?' + (new URLSearchParams('m=getbduss&sign=' + sign + (fullModeStatus ? "&full" : "")).toString()), {
-        signal: controller.bduss.signal
+        signal: controller.bduss[controller.bduss.length - 1].signal
       }).then(async response => {
         response = await response.json()
         if (response?.errno !== 0) {
@@ -192,7 +192,7 @@
               Object.keys(response.data.data).map(key => {
                 if (key === "stokenList") {
                   Object.keys(response.data.data["stokenList"]).map(stokenKey => {
-                    htmlTemplate += `<li><span style="font-size: 1.1rem">${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
+                    htmlTemplate += `<li><span style="font-size: 1.1rem">stoken_${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
                   })
                 } else {
                   htmlTemplate += `<li><span style="font-size: 1.1rem">${escapeHTML(key)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data[key])}</span></li>`
@@ -208,7 +208,7 @@
           switchActiveStatus("card-bduss-error")
         }
       }).catch(e => {
-        if (e.toString() !== "AbortError: The user aborted a request.") {
+        if (!controller.bduss[controller.bduss.length - 2].signal.aborted) {
           switchActiveStatus("card-bduss-error")
         }
       })
