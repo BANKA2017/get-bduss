@@ -189,15 +189,15 @@
             if (fullModeStatus && response.data.data) {
               //full mode
               let htmlTemplate = `<ul style="text-align: start;">`
-              Object.keys(response.data.data).map(key => {
+              for (const key of response.data.data) {
                 if (key === "stokenList") {
-                  Object.keys(response.data.data["stokenList"]).map(stokenKey => {
+                  for (const stokenKey of response.data.data["stokenList"]) {
                     htmlTemplate += `<li><span style="font-size: 1.1rem">stoken_${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
-                  })
+                  }
                 } else {
                   htmlTemplate += `<li><span style="font-size: 1.1rem">${escapeHTML(key)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data[key])}</span></li>`
                 }
-              })
+              }
 
               htmlTemplate += `</ul>`
               getElement("card-bduss-success-inject").innerHTML = htmlTemplate
@@ -219,7 +219,7 @@
         return
       }
       try {
-        callbackURL = new URL(atob(decodeURI(hash.slice(2))))
+        callbackURL = new URL(atob(decodeURIComponent(hash.slice(2))))
         getElement("app-alert-link").innerText = callbackURL.host
         getElement("app-alert-link").href = callbackURL.origin
         getElement("app-alert").classList.remove("none")
