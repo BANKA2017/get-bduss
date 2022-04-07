@@ -73,7 +73,7 @@
       <div id="card-bduss-success" class="none">
         <h3>BDUSS获取成功</h3>
         <div style="margin-top: 1em;">
-          <p class="zi-card pin" style="user-select: all; text-align: start; word-break: break-all;" id="bduss-list">
+          <p class="zi-card pin" style="user-select: all; text-align: start; word-break: break-all;" id="bduss-list" onclick="copy(this)">
           </p>
         </div>
         <div id="card-bduss-success-inject"></div>
@@ -96,6 +96,7 @@
       <ul>
         <li>可直接点击 "网页授权" 并在新打开页授权，无需客户端扫码</li>
         <li>打开百度页面时请使用移动设备或将浏览器ua设置为移动设备的ua</li>
+        <li>点击对应的项目即可将文本拷贝到剪贴板</li>
         <li>本站使用Google Analytics</li>
         <li>本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank" style="text-decoration: none;">GitHub
             仓库</a></li>
@@ -117,6 +118,16 @@
     let activeId = "card-loading"//active id
     let fullModeStatus = false
     let callbackURL = {}
+
+    //clipboard
+    const clipboard = navigator.clipboard
+    const clickToCopy = clipboard !== undefined
+
+    const copy = (dom) => {
+      if (clickToCopy) {
+        clipboard.writeText(dom.innerText)
+      }
+    }
 
     const getElement = (id) => {
       return document.getElementById(id)
@@ -189,13 +200,13 @@
             if (fullModeStatus && response.data.data) {
               //full mode
               let htmlTemplate = `<ul style="text-align: start;">`
-              for (const key of response.data.data) {
+              for (const key in response.data.data) {
                 if (key === "stokenList") {
-                  for (const stokenKey of response.data.data["stokenList"]) {
-                    htmlTemplate += `<li><span style="font-size: 1.1rem">stoken_${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
+                  for (const stokenKey in response.data.data["stokenList"]) {
+                    htmlTemplate += `<li><span style="font-size: 1.1rem">stoken_${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all;" onclick="copy(this)">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
                   }
                 } else {
-                  htmlTemplate += `<li><span style="font-size: 1.1rem">${escapeHTML(key)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data[key])}</span></li>`
+                  htmlTemplate += `<li><span style="font-size: 1.1rem">${escapeHTML(key)}</span>: <span style="user-select: all; word-break: break-all;" onclick="copy(this)">${escapeHTML(response.data.data[key])}</span></li>`
                 }
               }
 
