@@ -195,7 +195,7 @@
           getElement("bduss-list").innerText = response.data.bduss
           if (callbackURL?.origin) {
             switchActiveStatus("card-bduss-success-eta")
-            eta((new Date()).getTime() + 5000, callbackURL.href + (callbackURL.search ? '&' : '?') + 'bduss=' + response.data.bduss)
+            eta((new Date()).getTime() + 5000, callbackURL.href + (callbackURL.search ? '&' : '?') + 'bduss=' + response.data.bduss + '&stoken=' + response.data.data.stokenList.tb)
           } else {
             if (fullModeStatus && response.data.data) {
               //full mode
