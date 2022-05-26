@@ -59,7 +59,7 @@
       <div id="card-scan" class="none">
         <img id="card-scan-img" alt="QRcode" src="" style="max-width: 200px;">
         <div style="margin-top: 1em;">
-          <button class="zi-btn" onclick="() => {fullMode();init()}" id="more-button">更多</button>
+          <button class="zi-btn" onclick="switchMode()" id="more-button">更多</button>
         </div>
         <div style="margin-top: 0.5em;">
           <a id="web-check-button" href="https://wappass.baidu.com/wp/?qrlogin=&amp;sign=" target="_blank">
@@ -274,6 +274,11 @@
         .replace(/\"/g, '&quot;')
         .replace(/\'/g, '&#39;')
         .replace(/\//g, '&#x2F;')
+    }
+
+    const switchMode = () => {
+      fullMode()
+      init()
     }
 
     hashCheck(location.hash)
