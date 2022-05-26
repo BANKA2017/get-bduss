@@ -27,6 +27,21 @@ php 7.x
 php-curl
 ```
 
+## 关于回调与stoken
+
+- 请将回调链接进行`base64`编码后以`hash`形式添加到连接到网站的链接中
+- 默认不提供`stoken`，如果需要请在`query`的`stoken_type`中体现，至于这个`stoken_type`的可用值请自行寻找
+
+参考格式
+
+```javascript
+//https://bduss.nest.moe/#/aHR0cHM6Ly9leGFtcGxlLmNvbS8/c3Rva2VuX3R5cGU9dGI=
+"https://bduss.nest.moe/#/" + btoa("https://example.com/?stoken_type=tb")//这样会回调会带贴吧的stoken
+//---
+"https://bduss.nest.moe/#/" + btoa("https://example.com/")//这样会不带stoken
+```
+
+
 ## 其他
 
 关于 Google analytics 可以参考 [SukkaW/cloudflare-workers-async-google-analytics](https://github.com/SukkaW/cloudflare-workers-async-google-analytics)

@@ -59,7 +59,7 @@
       <div id="card-scan" class="none">
         <img id="card-scan-img" alt="QRcode" src="" style="max-width: 200px;">
         <div style="margin-top: 1em;">
-          <button class="zi-btn" onclick="fullMode()">更多</button>
+          <button class="zi-btn" onclick="() => {fullMode();init()}" id="more-button">更多</button>
         </div>
         <div style="margin-top: 0.5em;">
           <a id="web-check-button" href="https://wappass.baidu.com/wp/?qrlogin=&amp;sign=" target="_blank">
@@ -98,8 +98,7 @@
         <li>打开百度页面时请使用移动设备或将浏览器ua设置为移动设备的ua</li>
         <li>点击对应的项目即可将文本拷贝到剪贴板</li>
         <li>本站使用Google Analytics</li>
-        <li>本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank" style="text-decoration: none;">GitHub
-            仓库</a></li>
+        <li>前往本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank" style="text-decoration: none;">GitHub 仓库</a> 获得更多信息</li>
       </ul>
     </div>
     <div style="text-align: center; margin-top: 1em;">Created by <a href="https://nest.moe"
@@ -118,6 +117,7 @@
     let activeId = "card-loading"//active id
     let fullModeStatus = false
     let callbackURL = {}
+    let callbackStoken = null
 
     //clipboard
     const clipboard = navigator.clipboard
@@ -176,7 +176,7 @@
       controller.bduss[controller.bduss.length - 1].abort()
       controller.bduss.push(new AbortController())
       //get status
-      fetch(api + '?' + (new URLSearchParams('m=getbduss&sign=' + sign + (fullModeStatus ? "&full" : "")).toString()), {
+      fetch(api + '?' + (new URLSearchParams('m=getbduss&sign=' + sign + (fullModeStatus ? "&full=1" : "")).toString()), {
         signal: controller.bduss[controller.bduss.length - 1].signal
       }).then(async response => {
         response = await response.json()
@@ -195,7 +195,7 @@
           getElement("bduss-list").innerText = response.data.bduss
           if (callbackURL?.origin) {
             switchActiveStatus("card-bduss-success-eta")
-            eta((new Date()).getTime() + 5000, callbackURL.href + (callbackURL.search ? '&' : '?') + 'bduss=' + response.data.bduss + '&stoken=' + response.data.data.stokenList.tb)
+            eta((new Date()).getTime() + 5000, callbackURL.href + (callbackURL.search ? '&' : '?') + 'bduss=' + response.data.bduss + ((fullModeStatus && response.data.data.stokenList[callbackStoken]) ? ('&stoken=' + response.data.data.stokenList[callbackStoken]) : ''))
           } else {
             if (fullModeStatus && response.data.data) {
               //full mode
@@ -231,6 +231,10 @@
       }
       try {
         callbackURL = new URL(atob(decodeURIComponent(hash.slice(2))))
+        callbackStoken = callbackURL.searchParams.get('stoken_type')
+        if (callbackStoken) {
+          fullMode()
+        }
         getElement("app-alert-link").innerText = callbackURL.host
         getElement("app-alert-link").href = callbackURL.origin
         getElement("app-alert").classList.remove("none")
@@ -251,15 +255,14 @@
     }
 
     const fullMode = () => {
-      if (fullModeStatus) {
-        document.querySelector("#card-scan > div:nth-child(2) > button").innerText = "更多"
-        document.querySelector("#card-scan > div:nth-child(2) > button").classList.remove("primary")
-      } else {
-        document.querySelector("#card-scan > div:nth-child(2) > button").innerText = "更少"
-        document.querySelector("#card-scan > div:nth-child(2) > button").classList.add("primary")
-      }
       fullModeStatus = !fullModeStatus
-      init()
+      if (!fullModeStatus) {
+        document.getElementById("more-button").innerText = "更多"
+        document.getElementById("more-button").classList.remove("primary")
+      } else {
+        document.getElementById("more-button").innerText = "更少"
+        document.getElementById("more-button").classList.add("primary")
+      }
     }
 
     //https://stackoverflow.com/questions/30661497/xss-prevention-and-innerhtml
