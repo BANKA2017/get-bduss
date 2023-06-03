@@ -10,7 +10,6 @@
   <meta name="description" content="扫码登录获取BDUSS">
   <meta name="keywords" content="百度,登录,百度登录,BDUSS,BDUSS在线获取">
   <title>扫码登录获取BDUSS</title>
-  <link rel="stylesheet" href="https://unpkg.com/@geist-ui/style@2.0.0/dist/style.css">
   <style>
     .block {
       display: block;
@@ -34,6 +33,71 @@
       }
     }
   </style>
+  <style >
+    /* 
+      mock @geist-ui 
+    */
+    .zi-btn {
+      border-radius: 5px;
+      border: 1px solid #666666;
+      padding: 0.5em 0;
+      background-color: white;
+      width: 100%;
+      max-width: 200px;
+      font-size: 1em;
+      color: #666666;
+      cursor: pointer;
+      transition: all;
+      transition-duration: 150ms;
+    }
+    .zi-btn:hover {
+      color: white;
+      background-color: black;
+    }
+    .success {
+      color: white;
+      border-color: #0070f3;
+      background-color: #0070f3;
+    }
+    .success:hover {
+      color: #0070f3;
+      background-color: white;
+    }
+    .primary {
+      color: white;
+      border: 1px solid black;
+      background-color: black;
+    }
+    .primary:hover {
+      color: black;
+      background-color: white;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+    .zi-card {
+      border-radius: 5px;
+      border: 1px solid #666666;
+      padding: 1rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    .zi-note {
+      border-radius: 5px;
+      border: 2px solid #f5a623;
+      padding: 1rem
+    }
+    .zi-note-type {
+      color: #f5a623;
+      font-weight: 700;
+    }
+  </style>
 </head>
 
 <body>
@@ -43,10 +107,11 @@
         style="text-decoration: none; word-break: break-all;">localhost</a>
     </p>
     <div id="card" class="zi-card pin" style="text-align: center;">
-      <div id="card-loading" class="zi-btn loading display" style="border-width: 0;">
-        <div class="zi-loading-shim" style="background-color: white;">
-          <i></i><i></i><i></i>
-        </div>
+      <div id="card-loading" style="text-align: center;">
+        <svg style="margin-left: 0.5rem; margin-right: 1.5rem; height: 2.5rem; width: 2.5rem; color: #0070f3;" class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
       </div>
 
       <div id="card-success" class="none">
@@ -57,7 +122,7 @@
       </div>
 
       <div id="card-scan" class="none">
-        <img id="card-scan-img" alt="QRcode" src="" style="max-width: 200px;">
+        <img id="card-scan-img" alt="QRcode" src="" style="max-width: 200px; width: 100%; aspect-ratio: 1;">
         <div style="margin-top: 1em;">
           <button class="zi-btn" onclick="switchMode()" id="more-button">更多</button>
         </div>
@@ -73,7 +138,7 @@
       <div id="card-bduss-success" class="none">
         <h3>BDUSS获取成功</h3>
         <div style="margin-top: 1em;">
-          <p class="zi-card pin" style="user-select: all; text-align: start; word-break: break-all;" id="bduss-list" onclick="copy(this)">
+          <p class="zi-card pin" style="user-select: all; text-align: start; word-break: break-all;" id="bduss-list">
           </p>
         </div>
         <div id="card-bduss-success-inject"></div>
@@ -88,16 +153,12 @@
           <button class="zi-btn primary" onclick="init()">再次获取</button>
         </div>
       </div>
-
     </div>
-
     <div class="zi-card pin" style="margin-top: 1em; border-color: #0dcaf0;">
       <h3>提示</h3>
       <ul>
         <li>可直接点击 "网页授权" 并在新打开页授权，无需客户端扫码</li>
         <li>打开百度页面时请使用移动设备或将浏览器ua设置为移动设备的ua</li>
-        <li>点击对应的项目即可将文本拷贝到剪贴板</li>
-        <li>本站使用Google Analytics</li>
         <li>前往本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank" style="text-decoration: none;">GitHub 仓库</a> 获得更多信息</li>
       </ul>
     </div>
@@ -105,29 +166,15 @@
         style="text-decoration: none;">BANKA</a> with ♥</div>
   </div>
   <script>
-    window.ga_tid = "UA-90617066-7";
-    window.ga_api = "https://ga.nest.moe";
-  </script>
-  <script src="https://unpkg.com/cfga@1.0.3/cfga.min.js" async></script>
-  <script>
     'use strict';
 
     const api = "https://api.nest.moe/baidu/bduss/v2/"
+    const defaultResetCount = 15 //baidu is 18
 
     let activeId = "card-loading"//active id
     let fullModeStatus = false
     let callbackURL = {}
     let callbackStoken = null
-
-    //clipboard
-    const clipboard = navigator.clipboard
-    const clickToCopy = clipboard !== undefined
-
-    const copy = (dom) => {
-      if (clickToCopy) {
-        clipboard.writeText(dom.innerText)
-      }
-    }
 
     const getElement = (id) => {
       return document.getElementById(id)
@@ -145,6 +192,7 @@
       qrcode: new AbortController(),
       bduss: [new AbortController()],
     }
+    let resetCount = 0
     const init = () => {
       switchActiveStatus("card-loading")
       controller.qrcode.abort()
@@ -175,6 +223,15 @@
       }
       controller.bduss[controller.bduss.length - 1].abort()
       controller.bduss.push(new AbortController())
+
+      if (resetCount > defaultResetCount) {
+        init()
+        resetCount = 1
+        return
+      } else {
+        resetCount++
+      }
+
       //get status
       fetch(api + '?' + (new URLSearchParams('m=getbduss&sign=' + sign + (fullModeStatus ? "&full=1" : "")).toString()), {
         signal: controller.bduss[controller.bduss.length - 1].signal
@@ -203,10 +260,10 @@
               for (const key in response.data.data) {
                 if (key === "stokenList") {
                   for (const stokenKey in response.data.data["stokenList"]) {
-                    htmlTemplate += `<li><span style="font-size: 1.1rem">stoken_${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all;" onclick="copy(this)">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
+                    htmlTemplate += `<li><span style="font-size: 1.1rem">stoken_${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all; font-weight: 300;">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
                   }
                 } else {
-                  htmlTemplate += `<li><span style="font-size: 1.1rem">${escapeHTML(key)}</span>: <span style="user-select: all; word-break: break-all;" onclick="copy(this)">${escapeHTML(response.data.data[key])}</span></li>`
+                  htmlTemplate += `<li><span style="font-size: 1.1rem">${escapeHTML(key)}</span>: <span style="user-select: all; word-break: break-all; font-weight: 300;">${escapeHTML(response.data.data[key])}</span></li>`
                 }
               }
 

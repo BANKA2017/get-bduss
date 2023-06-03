@@ -15,8 +15,7 @@
 
 `/index.html` 是演示站 <https://bduss.nest.moe> 的源码，要直接使用需要修改或删除下述几项
 
-- `L108` 及 `L109` Google analytics 相关
-- `L115` api地址
+- `L171` api地址
 
 ## 环境要求
 
@@ -43,7 +42,5 @@ php-curl
 
 
 ## 其他
-
-关于 Google analytics 可以参考 [SukkaW/cloudflare-workers-async-google-analytics](https://github.com/SukkaW/cloudflare-workers-async-google-analytics)
 
 关于本项目原理可以参考 [扫码登录百度获取BDUSS](https://blog.nest.moe/2018/07/17/scan-qrcode-to-fetch-bduss/)
