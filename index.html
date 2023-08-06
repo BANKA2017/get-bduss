@@ -19,6 +19,14 @@
       display: none;
     }
 
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
     @media screen and (min-width: 0) {
       .container {
         padding-left: 30px;
@@ -33,7 +41,7 @@
       }
     }
   </style>
-  <style >
+  <style>
     /* 
       mock @geist-ui 
     */
@@ -50,49 +58,60 @@
       transition: all;
       transition-duration: 150ms;
     }
+
     .zi-btn:hover {
       color: white;
       background-color: black;
     }
+
     .success {
       color: white;
       border-color: #0070f3;
       background-color: #0070f3;
     }
+
     .success:hover {
       color: #0070f3;
       background-color: white;
     }
+
     .primary {
       color: white;
       border: 1px solid black;
       background-color: black;
     }
+
     .primary:hover {
       color: black;
       background-color: white;
     }
+
     @keyframes spin {
       to {
         transform: rotate(360deg);
       }
     }
+
     .animate-spin {
       animation: spin 1s linear infinite;
     }
+
     .zi-card {
       border-radius: 5px;
       border: 1px solid #666666;
       padding: 1rem;
     }
+
     li {
       margin-bottom: 0.5rem;
     }
+
     .zi-note {
       border-radius: 5px;
       border: 2px solid #f5a623;
       padding: 1rem
     }
+
     .zi-note-type {
       color: #f5a623;
       font-weight: 700;
@@ -104,13 +123,16 @@
   <div id="app" class="container" style="padding-top: 2em;">
     <p id="app-alert" class="zi-note alert none" style="font-size: 1.1em">
       <span class="zi-note-type" style="font-size: 1.1rem">警告:</span> 将跳转到: <a id="app-alert-link" href="."
-        style="text-decoration: none; word-break: break-all;">localhost</a>
+        target="_blank" style="word-break: break-all;">localhost</a>
     </p>
     <div id="card" class="zi-card pin" style="text-align: center;">
       <div id="card-loading" style="text-align: center;">
-        <svg style="margin-left: 0.5rem; margin-right: 1.5rem; height: 2.5rem; width: 2.5rem; color: #0070f3;" class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg style="margin-left: 0.5rem; margin-right: 1.5rem; height: 2.5rem; width: 2.5rem; color: #0070f3;"
+          class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <path style="opacity: 0.75;" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
         </svg>
       </div>
 
@@ -159,11 +181,11 @@
       <ul>
         <li>可直接点击 "网页授权" 并在新打开页授权，无需客户端扫码</li>
         <li>打开百度页面时请使用移动设备或将浏览器ua设置为移动设备的ua</li>
-        <li>前往本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank" style="text-decoration: none;">GitHub 仓库</a> 获得更多信息</li>
+        <li>前往本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank">GitHub 仓库</a> 获得更多信息</li>
       </ul>
     </div>
-    <div style="text-align: center; margin-top: 1em;">Created by <a href="https://nest.moe"
-        style="text-decoration: none;">BANKA</a> with ♥</div>
+    <div style="text-align: center; margin-top: 1em;">Created by <a href="https://nest.moe" target="_blank">BANKA</a>
+      with ♥</div>
   </div>
   <script>
     'use strict';
@@ -250,9 +272,14 @@
           switchActiveStatus("card-bduss-error")
         } else if (response.data.status === 2) {
           getElement("bduss-list").innerText = response.data.bduss
-          if (callbackURL?.origin) {
+          if (callbackURL?.href) {
             switchActiveStatus("card-bduss-success-eta")
-            eta((new Date()).getTime() + 5000, callbackURL.href + (callbackURL.search ? '&' : '?') + 'bduss=' + response.data.bduss + ((fullModeStatus && response.data.data.stokenList[callbackStoken]) ? ('&stoken=' + response.data.data.stokenList[callbackStoken]) : ''))
+            callbackURL.searchParams.append('bduss', response.data.bduss)
+            if (fullModeStatus && response.data.data.stokenList[callbackStoken]) {
+              callbackURL.searchParams.append('stoken', response.data.data.stokenList[callbackStoken])
+            }
+
+            eta((new Date()).getTime() + 5000, callbackURL.href.replace(callbackURL.hash, '').replace(callbackURL.search, '') + '?' + callbackURL.searchParams.toString())
           } else {
             if (fullModeStatus && response.data.data) {
               //full mode
@@ -292,8 +319,8 @@
         if (callbackStoken) {
           fullMode()
         }
-        getElement("app-alert-link").innerText = callbackURL.host
-        getElement("app-alert-link").href = callbackURL.origin
+        getElement("app-alert-link").innerText = callbackURL.href
+        getElement("app-alert-link").href = callbackURL.href
         getElement("app-alert").classList.remove("none")
         getElement("app-alert").classList.add("block")
       } catch (error) {
