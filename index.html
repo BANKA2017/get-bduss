@@ -81,11 +81,6 @@
       background-color: black;
     }
 
-    .primary:hover {
-      color: black;
-      background-color: white;
-    }
-
     @keyframes spin {
       to {
         transform: rotate(360deg);
@@ -180,7 +175,8 @@
       <h3>提示</h3>
       <ul>
         <li>可直接点击 "网页授权" 并在新打开页授权，无需客户端扫码</li>
-        <li>打开百度页面时请使用移动设备或将浏览器ua设置为移动设备的ua</li>
+        <li>打开百度页面时请使用移动设备或将浏览器 User-Agent 设置为移动设备的 User-Agent</li>
+        <li>点击 “更多” 将会获得更多信息，否则只会获取 BDUSS</li>
         <li>前往本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank">GitHub 仓库</a> 获得更多信息</li>
       </ul>
     </div>
@@ -190,7 +186,10 @@
   <script>
     'use strict';
 
+    // !!! DEPLOY YOUR OWN API ENDPOINT !!! vvv
     const api = "https://api.nest.moe/baidu/bduss/v2/"
+    // !!! DEPLOY YOUR OWN API ENDPOINT !!! ^^^
+
     const defaultResetCount = 15 //baidu is 18
 
     let activeId = "card-loading"//active id
@@ -215,8 +214,12 @@
       bduss: [new AbortController()],
     }
     let resetCount = 0
+
+    let sign = ''
+
     const init = () => {
       switchActiveStatus("card-loading")
+      getElement("card-bduss-success-inject").innerHTML = ''
       controller.qrcode.abort()
       controller.qrcode = new AbortController()
       //get qrcode
@@ -228,10 +231,11 @@
           switchActiveStatus("card-bduss-error")
           return
         }
+        sign = response.data.sign
         getElement("card-scan-img").src = "//" + response.data.imgurl
-        getElement("web-check-button").href = "https://wappass.baidu.com/wp/?qrlogin=&sign=" + response.data.sign
+        getElement("web-check-button").href = "https://wappass.baidu.com/wp/?qrlogin=&sign=" + sign
         switchActiveStatus("card-scan")
-        getStatus(1, response.data.sign)
+        getStatus(1, sign)
       }).catch(() => switchActiveStatus("card-bduss-error"))
     }
 
@@ -269,6 +273,7 @@
           }
           getStatus(response.data.status, sign)
         } else if (response.data.status === -1) {
+          sign = ''
           switchActiveStatus("card-bduss-error")
         } else if (response.data.status === 2) {
           getElement("bduss-list").innerText = response.data.bduss
@@ -297,13 +302,16 @@
               htmlTemplate += `</ul>`
               getElement("card-bduss-success-inject").innerHTML = htmlTemplate
             }
+            sign = ''
             switchActiveStatus("card-bduss-success")
           }
         } else {
+          sign = ''
           switchActiveStatus("card-bduss-error")
         }
       }).catch(e => {
         if (!controller.bduss[controller.bduss.length - 2].signal.aborted) {
+          sign = ''
           switchActiveStatus("card-bduss-error")
         }
       })
@@ -341,10 +349,8 @@
     const fullMode = () => {
       fullModeStatus = !fullModeStatus
       if (!fullModeStatus) {
-        document.getElementById("more-button").innerText = "更多"
         document.getElementById("more-button").classList.remove("primary")
       } else {
-        document.getElementById("more-button").innerText = "更少"
         document.getElementById("more-button").classList.add("primary")
       }
     }
@@ -362,7 +368,7 @@
 
     const switchMode = () => {
       fullMode()
-      init()
+      getStatus(1, sign)
     }
 
     hashCheck(location.hash)

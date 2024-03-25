@@ -15,7 +15,7 @@
 
 `/index.html` 是演示站 <https://bduss.nest.moe> 的源码，要直接使用需要修改或删除下述几项
 
-- `L171` api地址
+- api 地址，搜索 `!!! DEPLOY YOUR OWN API ENDPOINT !!!` 找到夹在中间的变量修改值即可，演示站后端随时会失效，请尽量自行部署
 
 ## 环境要求
 
