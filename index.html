@@ -322,7 +322,7 @@
         return
       }
       try {
-        callbackURL = new URL(atob(decodeURIComponent(hash.slice(2))))
+        callbackURL = new URL(atob(decodeURIComponent(hash.slice(2)).replaceAll('_', '/').replaceAll('-', '+')))
         callbackStoken = callbackURL.searchParams.get('stoken_type')
         if (callbackStoken) {
           fullMode()
