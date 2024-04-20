@@ -196,6 +196,7 @@
     let fullModeStatus = false
     let callbackURL = {}
     let callbackStoken = null
+    let hashCallback = false
 
     const getElement = (id) => {
       return document.getElementById(id)
@@ -284,7 +285,7 @@
               callbackURL.searchParams.append('stoken', response.data.data.stokenList[callbackStoken])
             }
 
-            eta((new Date()).getTime() + 5000, callbackURL.href.replace(callbackURL.hash, '').replace(callbackURL.search, '') + '?' + callbackURL.searchParams.toString())
+            eta((new Date()).getTime() + 5000, callbackURL.href.replace(callbackURL.hash, '').replace(callbackURL.search, '') + (hashCallback ? '#/' : '?') + callbackURL.searchParams.toString())
           } else {
             if (fullModeStatus && response.data.data) {
               //full mode
@@ -323,7 +324,17 @@
       }
       try {
         callbackURL = new URL(atob(decodeURIComponent(hash.slice(2)).replaceAll('_', '/').replaceAll('-', '+')))
+        if (window.location.host + window.location.pathname === callbackURL.host + callbackURL.pathname) {
+          throw Error('Loop!')
+        }
         callbackStoken = callbackURL.searchParams.get('stoken_type')
+        // try hash
+        if (callbackURL.hash && !callbackStoken) {
+          callbackStoken = (new URLSearchParams(callbackURL.hash.slice(2))).get('stoken_type')
+          if (callbackStoken) {
+            hashCallback = true
+          }
+        }
         if (callbackStoken) {
           fullMode()
         }

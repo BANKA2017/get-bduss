@@ -1,37 +1,52 @@
 'use strict'
-//const ORIGIN = ''//Environment Variables
-const AllowedReferrer = ''// 'a.com|b.com|c.com' multiple domains is supported
-const init = {
+const responseInit = (referrer = '*') => ({
     status: 403,
     headers: {
         'content-type': 'application/json;charset=UTF-8',
-        'access-control-allow-origin': (typeof ORIGIN !== 'undefined') ? ORIGIN : '*',
+        'access-control-allow-origin': referrer,
         'access-control-allow-methods': 'GET',
         'X-XSS-Protection': '1; mode=block',
         'X-Frame-Options': 'sameorigin',
     },
-}
-
-const globalHeaders = new Headers({
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
 })
 
-const callback = "get_object_value"
-
-addEventListener('fetch', event => {
-    return event.respondWith(switchRouter(event.request.url, event))
+const requestHeaders = new Headers({
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
 })
 
-async function switchRouter(url) {
-    const parseUrl = new URL(url)
+// const callback = ''//"get_object_value_" + Date.now()
+
+async function switchRouter(request, env) {
+    const parseUrl = new URL(request.url)
     const _searchParams = parseUrl.searchParams
     let resp = {
         "errno": -1,
         "msg": "Forbidden",
         "data": []
     }
-    if (AllowedReferrer === '' || RegExp('(^|\.)(' + AllowedReferrer + ')$').test(parseUrl.host)) {
-        init.status = 200
+
+    // referrer
+    let referrer = env.REFERER ? env.REFERER : '*'
+    if (referrer !== '*') {
+        referrer = referrer.split('|').find(x => x.trim() === request.headers.get('referer'))
+    }
+
+    // router
+    let router = env.ROUTER ? env.ROUTER : ''
+    if (router !== '') {
+        router = router.split('|').some(x => {
+            try {
+                const parsedRouter = new URL(x.trim())
+                return parseUrl.host === parsedRouter.host && parseUrl.pathname === parsedRouter.pathname
+            } catch {
+                return false
+            }
+        })
+    }
+
+    const respInit = responseInit('*')
+    if ((referrer === '*' || referrer !== undefined) && router) {
+        respInit.status = 200
         switch (_searchParams.get("m")) {
             case "getqrcode":
                 resp.data = await getqrcode()
@@ -52,30 +67,28 @@ async function switchRouter(url) {
         }
     }
 
-    return new Response(JSON.stringify(resp), init)
+    return new Response(JSON.stringify(resp), respInit)
 }
 
 async function getqrcode() {
-    const response = await (await fetch("https://passport.baidu.com/v2/api/getqrcode?lp=pc", { headers: globalHeaders })).json()
+    const response = await (await fetch("https://passport.baidu.com/v2/api/getqrcode?lp=pc", { headers: requestHeaders })).json()
     return { sign: response.sign, imgurl: response.imgurl }
 }
 
 async function getBduss(sign, full = false) {
     let resp = { status: 1, bduss: "", msg: "", fullmode: false }
-    let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=" + callback, { headers: globalHeaders })).text()
+    let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=a", { headers: requestHeaders })).text()
     if (response) {
-        const parsedData = callbackfunc(response)
-
-        const errno = parsedData.errno
+        const errno = parseInt(/"errno":([\-0-9]+)(?:,|})/.exec(response)[1])
         if (errno === 1) {
             resp.status = 1
         } else if (errno === 0) {
-            const channel_v = JSON.parse(parsedData.channel_v)
+            const channel_v = JSON.parse(/"channel_v":"(.*)"}\)/.exec(response)[1].replace(/\\/gm, ''))
             if (channel_v.status) {
                 resp.status = 0
                 resp.msg = "Continue"
             } else {
-                const userData = callbackfunc(await (await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?callback=' + callback + '&bduss=' + channel_v.v, { headers: globalHeaders })).text())
+                const userData = await JSON.parse(((await (await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss=' + channel_v.v, { headers: requestHeaders })).text()).replace(/'([^'']+)'/gm, `"$1"`)).replace(/\\&/gm, "&"))
 
                 if (userData && userData.code === "110000") {
                     resp.status = 2
@@ -111,6 +124,10 @@ function parseStoken(stokenList) {
     return Object.fromEntries(JSON.parse(stokenList.replace(/&quot;/gm, '"')).map(x => x.split('#')))
 }
 
-function callbackfunc(callback_str) {
-    return Function(`const ${callback} = (obj) => obj; return ${callback_str}`)()
-}
+// function callbackfunc(callback_str) {
+//     return Function(`const ${callback} = (obj) => obj; return ${callback_str}`)()
+// }
+
+addEventListener('fetch', event => {
+    return event.respondWith(switchRouter(event.request, globalThis))
+})
