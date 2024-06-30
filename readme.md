@@ -36,6 +36,7 @@ php-curl
 
 - 请将回调链接进行`base64`/`base64url`编码后以`hash`形式添加到连接到网站的链接中
 - 默认不提供`stoken`，如果需要请在`query`/`hash`的`stoken_type`中体现，至于这个`stoken_type`的可用值请自行寻找
+- `query` 和 `hash` 同时存在时，将合并数据，返回模式取决于 `stoken_type` 所处位置，两边同时存在的数据将以 `query` 的为准
 
 参考格式
 

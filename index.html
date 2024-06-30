@@ -1,4 +1,4 @@
-<html lang="zh-CN">
+<!DOCTYPE html lang="zh-CN">
 
 <head>
   <meta charset="utf-8">
@@ -139,7 +139,7 @@
       </div>
 
       <div id="card-scan" class="none">
-        <img id="card-scan-img" alt="QRcode" src="" style="max-width: 200px; width: 100%; aspect-ratio: 1;">
+        <img id="card-scan-img" alt="QRcode" style="max-width: 200px; width: 100%; aspect-ratio: 1;">
         <div style="margin-top: 1em;">
           <button class="zi-btn" onclick="switchMode()" id="more-button">更多</button>
         </div>
@@ -329,17 +329,23 @@
         }
         callbackStoken = callbackURL.searchParams.get('stoken_type')
         // try hash
-        if (callbackURL.hash && !callbackStoken) {
-          callbackStoken = (new URLSearchParams(callbackURL.hash.slice(2))).get('stoken_type')
-          if (callbackStoken) {
-            hashCallback = true
+        if (callbackURL.hash) {
+          const hashParams = [...new URLSearchParams(callbackURL.hash.slice(2)).entries()]
+          for (const hashParam of hashParams) {
+            if (!callbackStoken && hashParam[0] === 'stoken_type') {
+              callbackStoken = hashParam[1]
+              hashCallback = true
+            }
+            if (!callbackURL.searchParams.has(hashParam[0])) {
+              callbackURL.searchParams.set(hashParam[0], hashParam[1])
+            }
           }
         }
         if (callbackStoken) {
           fullMode()
         }
-        getElement("app-alert-link").innerText = callbackURL.href
-        getElement("app-alert-link").href = callbackURL.href
+        getElement("app-alert-link").innerText = hashCallback ? callbackURL.href.replace(callbackURL.search, '') : callbackURL.href.replace(callbackURL.hash, '')
+        getElement("app-alert-link").href = hashCallback ? callbackURL.href.replace(callbackURL.search, '') : callbackURL.href.replace(callbackURL.hash, '')
         getElement("app-alert").classList.remove("none")
         getElement("app-alert").classList.add("block")
       } catch (error) {
@@ -353,7 +359,7 @@
         document.querySelector("#card-bduss-success-eta > h1").innerText = Math.floor((endTime - now) / 1000)
         setTimeout(() => eta(endTime, loaction), 200);
       } else {
-        window.location.replace(loaction)
+        window.open(loaction, '_self')
       }
     }
 
