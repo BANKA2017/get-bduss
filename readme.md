@@ -6,10 +6,24 @@
 
 ### 环境变量
 
-| 变量名    | 默认值   | 格式                                                                   | 备注                                                                                       |
-| :-------- | :------- | :--------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
-| `REFERER` | `*`      | `http://example.com/\|https://example.com/`                            | 不需要路径                                                                                 |
-| `ROUTER`  | 空字符串 | `http://example.com/\|https://example.com/path/\|https://example.com/` | 即触发路由的部分（建议将 设置 -> 触发器 -> 路由 列表里面的都放进去，注意要去掉正则表达式） |
+| 变量名    | 默认值 | 格式                                                                   | 备注                                                                                                               |
+| :-------- | :----- | :--------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| `REFERER` | `*`    | `http://example.com/\|https://example.com/`                            | 不需要路径                                                                                                         |
+| `ROUTER`  | `/api` | `http://example.com/\|https://example.com/path/\|https://example.com/` | 即触发路由的部分（建议将 设置 -> 触发器 -> 路由 列表里面的都放进去，注意要去掉正则表达式）。默认值**没有**后面斜杠 |
+
+可以取消掉 `wrangler.jsonc` 的键 `vars` 的注释来设置环境变量
+
+### Wrangler
+
+```sh
+# 本地调试
+npx wrangler dev -l
+
+# 发布
+npx wrangler publish 
+```
+
+更多配置请查看 Cloudflare 的相关文档
 
 ## ~~php 后端~~
 
@@ -22,6 +36,7 @@
 `/index.html` 是演示站 <https://bduss.nest.moe> 的源码，要直接使用需要修改或删除下述几项
 
 - api 地址，搜索 `!!! DEPLOY YOUR OWN API ENDPOINT !!!` 找到夹在中间的变量修改值即可，演示站后端已开访问校验，请尽量自行部署后端
+  - 如果直接用 wrangler 或者通过 GitHub 部署到 workers 的可以无视
 
 ## 环境要求
 
@@ -57,7 +72,6 @@ php-curl
 "https://bduss.nest.moe/#/" + btoa("https://example.com/")
 // https://example.com/?stoken_type=tb&bduss=...
 ```
-
 
 ## 其他
 

@@ -11,7 +11,7 @@ const responseInit = (referrer = '*') => ({
 })
 
 const requestHeaders = new Headers({
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
 })
 
 // const callback = ''//"get_object_value_" + Date.now()
@@ -31,21 +31,8 @@ async function switchRouter(request, env) {
         referrer = referrer.split('|').find(x => x.trim() === request.headers.get('referer'))
     }
 
-    // router
-    let router = env.ROUTER ? env.ROUTER : ''
-    if (router !== '') {
-        router = router.split('|').some(x => {
-            try {
-                const parsedRouter = new URL(x.trim())
-                return parseUrl.host === parsedRouter.host && parseUrl.pathname === parsedRouter.pathname
-            } catch {
-                return false
-            }
-        })
-    }
-
-    const respInit = responseInit('*')
-    if ((referrer === '*' || referrer !== undefined) && router) {
+    const respInit = responseInit(referrer)
+    if (referrer === '*' || referrer !== undefined) {
         respInit.status = 200
         switch (_searchParams.get("m")) {
             case "getqrcode":
@@ -128,6 +115,31 @@ function parseStoken(stokenList) {
 //     return Function(`const ${callback} = (obj) => obj; return ${callback_str}`)()
 // }
 
-addEventListener('fetch', event => {
-    return event.respondWith(switchRouter(event.request, globalThis))
-})
+export default {
+    async fetch(request, env) {
+        const parseUrl = new URL(request.url)
+
+        // router
+        let router = env.ROUTER ? env.ROUTER : ''
+        if (router !== '') {
+            router = router.split('|').some(x => {
+                try {
+                    const parsedRouter = new URL(x.trim())
+                    return parseUrl.host === parsedRouter.host && parseUrl.pathname === parsedRouter.pathname
+                } catch {
+                    return false
+                }
+            })
+        } else {
+            router = parseUrl.pathname === '/api'
+        }
+
+        if (router) {
+            // TODO: Add your custom /api/* logic here.
+            return await switchRouter(request, env)
+        }
+        // Otherwise, serve the static assets.
+        // Without this, the Worker will error and no assets will be served.
+        return env.ASSETS.fetch(request)
+    }
+}
