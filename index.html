@@ -268,7 +268,7 @@
 
 
     const openAuthPage = () => {
-      authPage = window.open('https://wappass.baidu.com/wp/?qrlogin&t=' + Math.ceil(Date.now() / 1000) + '&error=0&sign=' + sign + '&cmd=login&lp=pc&adapter=3', 'auth', 'width=' + window.innerWidth + ',height=' + window.innerHeight);
+      authPage = window.open('https://wappass.baidu.com/wp/?qrlogin&t=' + Math.ceil(Date.now() / 1000) + '&error=0&sign=' + sign + '&cmd=login&lp=pc&adapter=3', 'get-bduss:auth', 'width=' + window.innerWidth + ',height=' + window.innerHeight);
     }
 
     const closeAuthPage = () => {
