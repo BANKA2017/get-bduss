@@ -143,10 +143,12 @@
         <div style="margin-top: 1em;">
           <button class="zi-btn" onclick="switchMode()" id="more-button">更多</button>
         </div>
-        <div style="margin-top: 0.5em;">
-          <a id="web-check-button" href="https://wappass.baidu.com/wp/?qrlogin=&amp;sign=" target="_blank">
-            <button class="zi-btn success">网页授权</button>
-          </a>
+        <a style="margin-top: 0.5em;" id="web-check-button-pc" href="https://wappass.baidu.com/wp/?qrlogin=&amp;sign="
+          target="_blank" class="block">
+          <button class="zi-btn success">网页授权</button>
+        </a>
+        <div style="margin-top: 0.5em;" id="web-check-button-mobile" class="none">
+          <button onclick="openAuthPage()" class="zi-btn success">网页授权</button>
         </div>
       </div>
       <div id="card-bduss-success-eta" class="none">
@@ -197,16 +199,32 @@
     let callbackURL = {}
     let callbackStoken = null
     let hashCallback = false
+    let authPage = null
+
+    // from https://wappass.baidu.com/wp/?qrlogin=&sign=
+    const isAndroid = window.navigator.appVersion.match(/android/gi)
+    const isHarmony = /(OpenHarmony|HarmonyOS)/i.test(window.navigator.userAgent)
+    const isIOS = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)
+
+    const isMobile = isAndroid || isHarmony || isIOS
 
     const getElement = (id) => {
       return document.getElementById(id)
     }
 
-    const switchActiveStatus = (id) => {
-      getElement(activeId).classList.remove("block")
-      getElement(activeId).classList.add("none")
+    const hideBlock = (id) => {
+      getElement(id).classList.remove("block")
+      getElement(id).classList.add("none")
+    }
+
+    const activeBlock = (id) => {
       getElement(id).classList.add("block")
       getElement(id).classList.remove("none")
+    }
+
+    const switchActiveStatus = (id) => {
+      hideBlock(activeId)
+      activeBlock(id)
       activeId = id
     }
 
@@ -234,10 +252,30 @@
         }
         sign = response.data.sign
         getElement("card-scan-img").src = "//" + response.data.imgurl
-        getElement("web-check-button").href = "https://wappass.baidu.com/wp/?qrlogin=&sign=" + sign
+        if (isMobile) {
+          hideBlock("web-check-button-pc")
+          activeBlock("web-check-button-mobile")
+        } else {
+          hideBlock("web-check-button-mobile")
+          activeBlock("web-check-button-pc")
+          getElement("web-check-button-pc").href = "https://wappass.baidu.com/wp/?qrlogin=&sign=" + sign
+        }
+
         switchActiveStatus("card-scan")
         getStatus(1, sign)
       }).catch(() => switchActiveStatus("card-bduss-error"))
+    }
+
+
+    const openAuthPage = () => {
+      authPage = window.open('https://wappass.baidu.com/wp/?qrlogin&t=' + Math.ceil(Date.now() / 1000) + '&error=0&sign=' + sign + '&cmd=login&lp=pc&adapter=3', 'auth', 'width=' + window.innerWidth + ',height=' + window.innerHeight);
+    }
+
+    const closeAuthPage = () => {
+      if (authPage) {
+        authPage.close()
+        authPage = null
+      }
     }
 
     const getStatus = (status, sign) => {
@@ -305,6 +343,7 @@
             }
             sign = ''
             switchActiveStatus("card-bduss-success")
+            closeAuthPage()
           }
         } else {
           sign = ''
