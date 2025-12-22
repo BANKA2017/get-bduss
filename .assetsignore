@@ -5,3 +5,4 @@ wrangler.jsonc
 .wrangler/
 node_modules/
 .gitignore
+_redirects

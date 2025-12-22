@@ -11,7 +11,7 @@ const responseInit = (referrer = '*') => ({
 })
 
 const requestHeaders = new Headers({
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
 })
 
 // const callback = ''//"get_object_value_" + Date.now()
@@ -140,6 +140,6 @@ export default {
         }
         // Otherwise, serve the static assets.
         // Without this, the Worker will error and no assets will be served.
-        return env.ASSETS.fetch(request)
+        return new Response("Not found", { status: 404 })// env.ASSETS.fetch(request)
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "get-bduss",
-    "compatibility_date": "2025-04-01",
+    "compatibility_date": "2025-12-21",
     "main": "./workers.js",
     "placement": {
         "mode": "smart"
@@ -11,7 +11,10 @@
     // },
     "assets": {
         "directory": "./",
-        "binding": "ASSETS",
-        "html_handling": "drop-trailing-slash"
-    }
+        "html_handling": "drop-trailing-slash",
+        "run_worker_first": ["/api"]
+    },
+
+    "workers_dev": false,
+    "preview_urls": false
 }
