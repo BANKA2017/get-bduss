@@ -6,3 +6,4 @@ wrangler.jsonc
 node_modules/
 .gitignore
 _redirects
+.git/
