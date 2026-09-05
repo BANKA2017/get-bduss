@@ -550,13 +550,13 @@
     const switchMode = () => {
       fullMode()
       // getStatus(1, sign)
-      init()
+      init(true)
     }
 
     const firstCallbackCheck = () => {
       localStorage.setItem('callback-checked', '1')
       switchActiveStatus("card-bduss-success")
-      init()
+      init(true)
     }
 
     hashCheck(location.hash)
@@ -566,7 +566,7 @@
     if (callbackURL?.host && isFirstUser) {
       switchActiveStatus("card-callback-check")
     } else {
-      init()
+      init(true)
     }
   </script>
 </body>
