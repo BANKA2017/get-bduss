@@ -25,11 +25,18 @@ npx wrangler publish
 
 更多配置请查看 Cloudflare 的相关文档
 
+### status 和 state
+
+- `status` 是一直沿用的数字状态码，混合了控制流程的进退/实际状态/远端返回状态
+- `state` 是新的状态码，表示准确的状态，后续更新以 `state` 为准
+  - `error`
+  - `waiting`
+  - `scanned`
+  - `success`
+
 ## ~~php 后端~~
 
-- 可以设置 `$origin`
-
-精力有限，不再维护 PHP 版后端，源码锁定
+最后一个 PHP 支持的版本是 [`0c5ae16`](https://github.com/BANKA2017/get-bduss/tree/0c5ae16fdf2e4f8244ff85bb0fd9301906558b38)
 
 ## 示例
 
@@ -37,15 +44,6 @@ npx wrangler publish
 
 - api 地址，搜索 `!!! DEPLOY YOUR OWN API ENDPOINT !!!` 找到夹在中间的变量修改值即可，演示站后端已开访问校验，请尽量自行部署后端
   - 如果直接用 wrangler 或者通过 GitHub 部署到 workers 的可以无视
-
-## 环境要求
-
-仅限 PHP 版有要求，workers 版直接部署
-
-```txt
-php 7.x
-php-curl
-```
 
 ## 关于回调与stoken
 

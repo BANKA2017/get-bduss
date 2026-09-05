@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="shortcut icon"
-    href="data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSImI3g1NkZFOyYjeDVDNDI7XzEiDQoJeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIg0KCXhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjUwMHB4IiBoZWlnaHQ9IjUwMHB4IiB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTAwIDUwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KCTxwYXRoIHN0eWxlPSJmaWxsOiMwMzZFQjg7c3Ryb2tlOiMyRUE3RTA7c3Ryb2tlLXdpZHRoOjEwO3N0cm9rZS1taXRlcmxpbWl0OjEwOyIgZD0iTTQ1Ny43MTQsMzc3LjcxNWMwLDQ0LjE4Mi0zNS44MTcsODAtODAsODANCglIMTIyLjI4NmMtNDQuMTg0LDAtODAtMzUuODE4LTgwLTgwVjEyMi4yODZjMC00NC4xODMsMzUuODE2LTgwLDgwLTgwaDI1NS40MjhjNDQuMTgzLDAsODAsMzUuODE3LDgwLDgwVjM3Ny43MTV6Ii8+DQoJPHJlY3QgeD0iODQiIHk9IjE3MCIgc3R5bGU9ImZpbGw6I0ZGRkZGRjsiIHdpZHRoPSIxODIuNjY3IiBoZWlnaHQ9IjMwIi8+DQoJPHJlY3QgeD0iMTYwLjMzMyIgeT0iMTcwIiBzdHlsZT0iZmlsbDojRkZGRkZGOyIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIxMCIvPg0KCTxyZWN0IHg9IjI3NSIgeT0iMTcwIiBzdHlsZT0iZmlsbDojRkZGRkZGOyIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIxMCIvPg0KCTxjaXJjbGUgc3R5bGU9ImZpbGw6bm9uZTtzdHJva2U6I0ZGRkZGRjtzdHJva2Utd2lkdGg6MzA7c3Ryb2tlLW1pdGVybGltaXQ6MTA7IiBjeD0iMzUyLjgzMyIgY3k9IjMxMS44MzUiIHI9IjYyLjgzMyIvPg0KPC9zdmc+DQo=">
+  <link href="favicon.ico" rel="icon">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="扫码登录获取BDUSS">
   <meta name="keywords" content="百度,登录,百度登录,BDUSS,BDUSS在线获取">
@@ -18,6 +17,17 @@
       display: none;
     }
 
+    .flex {
+      display: flex;
+      justify-content: center;
+    }
+
+    .callback-link {
+      margin-top: 0.5em;
+      display: flex;
+      justify-content: center;
+    }
+
     a {
       text-decoration: none;
     }
@@ -28,8 +38,8 @@
 
     @media screen and (min-width: 0) {
       .container {
-        padding-left: 30px;
-        padding-right: 30px;
+        padding-left: 5%;
+        padding-right: 5%;
       }
     }
 
@@ -38,6 +48,10 @@
         padding-left: 20vw;
         padding-right: 20vw;
       }
+    }
+
+    .standard-max-width {
+      max-width: 200px;
     }
   </style>
   <style>
@@ -48,7 +62,7 @@
       border-radius: 5px;
       border: 1px solid #666666;
       padding: 0.5em 0;
-      background-color: white;
+      background-color: #f8f8f8;
       width: 100%;
       max-width: 200px;
       font-size: 1em;
@@ -71,7 +85,7 @@
 
     .success:hover {
       color: #0070f3;
-      background-color: white;
+      background-color: #f8f8f8;
     }
 
     .primary {
@@ -96,6 +110,10 @@
       padding: 1rem;
     }
 
+    ul {
+      padding-left: 1em;
+    }
+
     li {
       margin-bottom: 0.5rem;
     }
@@ -110,79 +128,173 @@
       color: #f5a623;
       font-weight: 700;
     }
+
+    .py-\[5vh\] {
+      padding-block: 5vh;
+    }
+
+    .sm\:py-\[10vh\] {
+      @media (width >=40rem
+
+        /* 640px */
+      ) {
+        padding-block: 10vh;
+      }
+    }
+
+    .lg\:py-\[18vh\] {
+      @media (width >=64rem) {
+        padding-block: 18vh;
+      }
+    }
+
+    .px-\[5vw\] {
+      padding-inline: 5vw;
+    }
+
+    .sm\:px-\[10vw\] {
+      @media (width >=40rem
+
+        /* 640px */
+      ) {
+        padding-inline: 10vw;
+      }
+    }
+
+    .lg\:px-\[20vw\] {
+      @media (width >=64rem
+
+        /* 1024px */
+      ) {
+        padding-inline: 20vw;
+      }
+    }
+
+    .longlong-content {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   </style>
 </head>
 
-<body>
-  <div id="app" class="container" style="padding-top: 2em;">
-    <p id="app-alert" class="zi-note alert none" style="font-size: 1.1em">
-      <span class="zi-note-type" style="font-size: 1.1rem">警告:</span> 将跳转到: <a id="app-alert-link" href="."
-        target="_blank" style="word-break: break-all;">localhost</a>
-    </p>
-    <div id="card" class="zi-card pin" style="text-align: center;">
+<body style="background-color: #f8f8f8;">
+  <div id="app" class="container px-[5vw] sm:px-[10vw] lg:px-[20vw] py-[5vh] sm:py-[10vh] lg:py-[18vh]">
+    <div id="app-alert" class="none">
+      <p style="font-size: 1.1em; width: 100%; max-width: 200px;" class="longlong-content">
+        <span style="user-select: none; margin-right: 0.25rem;">&gt;</span><span id="app-alert-link" href="."
+          target="_blank" style="color: #0070f3; cursor: pointer;" onclick="alert(this.href)">localhost</span>
+      </p>
+    </div>
+
+    <div id="card" class="zi-card pin" style="text-align: center; border: none;">
+      <div id="card-callback-check" class="none" style="text-align: center;">
+        <div style="display:flex; justify-content:center; align-items: center; width: 100%;">
+          <ul style="margin-top:0; max-width: 200px; text-align: start;">
+            <li>即将跳转至第三方应用</li>
+            <li><span style="font-family:monospace;">/get-bduss</span> 不控制该应用</li>
+            <li>继续操作将会发送Cookie</li>
+            <li>请确认您<span style="text-decoration: underline; text-underline-offset: 2px;">信任</span>该应用</li>
+            <li>否则请<span style="text-decoration: underline; text-underline-offset: 2px;">立即关闭</span>本页面</li>
+          </ul>
+        </div>
+        <button onclick="firstCallbackCheck()" style="max-width: 200px;" class="zi-btn success"
+          id="card-callback-check">继续</button>
+      </div>
+
       <div id="card-loading" style="text-align: center;">
-        <svg style="margin-left: 0.5rem; margin-right: 1.5rem; height: 2.5rem; width: 2.5rem; color: #0070f3;"
-          class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path style="opacity: 0.75;" fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-          </path>
-        </svg>
+        <div style="display:flex; justify-content:center; align-items: center; width: 100%;">
+          <div class="zi-card"
+            style="max-width: calc(200px - 2rem); max-height: calc(200px - 2rem); display:flex; justify-content:center; align-items: center; width: 100%; aspect-ratio: 1; background-color: #ffffff;">
+            <svg style="height: 2.5rem; width: 2.5rem; color: #0070f3;" class="animate-spin"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path style="opacity: 0.75;" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+          </div>
+        </div>
       </div>
 
       <div id="card-success" class="none">
-        <img
-          src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHJvbGU9ImltZyIgdmVyc2lvbj0iMS4xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjM2cHgiIGhlaWdodD0iMzZweCI+PGNpcmNsZSBmaWxsPSIjM0M3NkZGIiBjeD0iMTgiIGN5PSIxOCIgcj0iMTgiIC8+PHBhdGggZmlsbD0iI0ZGRkZGRiIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTTEwLjQ1LDE3LjE2N2w2LDUuNzUgTDEwLjQ1LDE3LjE2N3oiIC8+PHBhdGggZmlsbD0iI0ZGRkZGRiIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZD0iTTE2LjQ1LDIyLjkxN2wxMS0xMCBMMTYuNDUsMjIuOTE3eiIgLz48L3N2Zz4="
-          alt="qrcode-success" style="margin-bottom: 1em;">
-        <p>扫描成功<br>请确认登录</p>
+        <div style="display:flex; justify-content:center; align-items: center; width: 100%;">
+          <div class="zi-card"
+            style="max-width: calc(200px - 2rem); max-height: calc(200px - 2rem); display:flex; justify-content:center; align-items: center; width: 100%; aspect-ratio: 1; background-color: #ffffff;">
+            <svg alt="qrcode-success" style="color: #3C76FF;" xmlns="http://www.w3.org/2000/svg" width="2.5rem"
+              height="2.5rem"
+              viewBox="0 0 16 16"><!-- Icon from Bootstrap Icons by The Bootstrap Authors - https://github.com/twbs/icons/blob/main/LICENSE.md -->
+              <path fill="currentColor"
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417L5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+            </svg>
+          </div>
+        </div>
+        <h3>请确认登录</h3>
       </div>
 
       <div id="card-scan" class="none">
-        <img id="card-scan-img" alt="QRcode" style="max-width: 200px; width: 100%; aspect-ratio: 1; max-height: 200px;">
-        <div style="margin-top: 1em;">
-          <button class="zi-btn" onclick="switchMode()" id="more-button">更多</button>
+        <div style="display:flex; justify-content:center; width: 100%;">
+          <div class="zi-card"
+            style="max-width: calc(200px - 2rem); max-height: calc(200px - 2rem); background-color: #ffffff;">
+            <img id="card-scan-img" alt="QRcode" style="width: 100%; aspect-ratio: 1;" onload="loadedQRCode()"
+              onerror="switchActiveStatus('card-bduss-error')">
+          </div>
         </div>
-        <a style="margin-top: 0.5em;" id="web-check-button-pc" href="https://wappass.baidu.com/wp/?qrlogin=&amp;sign="
-          target="_blank" class="block">
-          <button class="zi-btn success">网页授权</button>
-        </a>
-        <div style="margin-top: 0.5em;" id="web-check-button-mobile" class="none">
-          <button onclick="openAuthPage()" class="zi-btn success">网页授权</button>
+        <div style="margin-top: 1em; display:flex; justify-content:center; ">
+          <button class="zi-btn" style="max-width: 200px;" onclick="switchMode()" id="more-button">更多</button>
+        </div>
+
+        <div style="margin-top: 0.5em; display:flex; justify-content:center;">
+          <a id="web-check-button-pc" href="https://wappass.baidu.com/wp/?qrlogin=&amp;sign=" target="_blank"
+            class="block" style="max-width: 200px; width: 100%;">
+            <button class="zi-btn success" style="width: 100%;">网页授权</button>
+          </a>
+          <button id="web-check-button-mobile" onclick="openAuthPage()"
+            class="zi-btn success none standard-max-width">网页授权</button>
         </div>
       </div>
       <div id="card-bduss-success-eta" class="none">
-        <h1>5</h1>
+        <div style="display:flex; justify-content:center; align-items: center; width: 100%;">
+          <div class="zi-card"
+            style="max-width: calc(200px - 2rem); max-height: calc(200px - 2rem); display:flex; justify-content:center; align-items: center; width: 100%; aspect-ratio: 1; background-color: #ffffff;">
+            <h1>5</h1>
+          </div>
+        </div>
+        <h3>即将跳转...</h3>
       </div>
       <div id="card-bduss-success" class="none">
-        <h3>BDUSS获取成功</h3>
-        <div style="margin-top: 1em;">
-          <p class="zi-card pin" style="user-select: all; text-align: start; word-break: break-all;" id="bduss-list">
+        <h3>Cookie 信息</h3>
+        <div style="margin-top: 1em; width: 100%;" class="flex">
+          <p class="zi-card pin" style="user-select: all; text-align: start; word-break: break-all; max-width: 500px;"
+            id="bduss-list">
           </p>
         </div>
-        <div id="card-bduss-success-inject"></div>
+        <div id="card-bduss-success-inject" class="flex"></div>
         <div style="margin-top: 1em;">
-          <button class="zi-btn primary" onclick="init()">再次获取</button>
+          <button class="zi-btn primary" onclick="init(true)">再次获取</button>
         </div>
       </div>
 
       <div id="card-bduss-error" class="none">
-        <h3>BDUSS获取失败</h3>
+        <div style="display:flex; justify-content:center; align-items: center; width: 100%;">
+          <div class="zi-card"
+            style="max-width: calc(200px - 2rem); max-height: calc(200px - 2rem); display:flex; justify-content:center; align-items: center; width: 100%; aspect-ratio: 1; background-color: #ffffff;">
+            <svg alt="qrcode-failed" style="color: #ff3333;" xmlns="http://www.w3.org/2000/svg" width="2.5rem"
+              height="2.5rem"
+              viewBox="0 0 16 16"><!-- Icon from Bootstrap Icons by The Bootstrap Authors - https://github.com/twbs/icons/blob/main/LICENSE.md -->
+              <path fill="currentColor"
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2a1 1 0 0 0 0-2" />
+            </svg>
+          </div>
+        </div>
+        <h3>二维码无效</h3>
         <div style="margin-top: 1em;">
-          <button class="zi-btn primary" onclick="init()">再次获取</button>
+          <button class="zi-btn primary" onclick="init(true)">再次获取</button>
         </div>
       </div>
     </div>
-    <div class="zi-card pin" style="margin-top: 1em; border-color: #0dcaf0;">
-      <h3>提示</h3>
-      <ul>
-        <li>可直接点击 "网页授权" 并在新打开页授权，无需客户端扫码</li>
-        <li>打开百度页面时请使用移动设备或将浏览器 User-Agent 设置为移动设备的 User-Agent</li>
-        <li>点击 “更多” 将会获得更多信息，否则只会获取 BDUSS</li>
-        <li>前往本页 <a href="https://github.com/BANKA2017/get-bduss" target="_blank">GitHub 仓库</a> 获得更多信息</li>
-      </ul>
-    </div>
-    <div style="text-align: center; margin-top: 1em;">Created by <a href="https://nest.moe" target="_blank">BANKA</a>
-      with ♥</div>
+    <div style="text-align: center; margin-top: 1em; font-family: monospace; color: #000000;"><a
+        href="https://github.com/BANKA2017/get-bduss" target="_blank">/get-bduss</a></div>
   </div>
   <script>
     'use strict';
@@ -199,6 +311,8 @@
     let callbackStoken = null
     let hashCallback = false
     let authPage = null
+    let nextInitAllow = 0
+    const nextInitAllowDuration = 1000 * 30// 30s
 
     // from https://wappass.baidu.com/wp/?qrlogin=&sign=
     const isAndroid = window.navigator.appVersion.match(/android/gi)
@@ -235,7 +349,13 @@
 
     let sign = ''
 
-    const init = () => {
+    const init = (force = false) => {
+      if (!force && nextInitAllow > 0 && Date.now() < nextInitAllow) {
+        switchActiveStatus("card-bduss-error")
+        return
+      }
+      nextInitAllow = Date.now() + nextInitAllowDuration
+
       switchActiveStatus("card-loading")
       getElement("card-bduss-success-inject").innerHTML = ''
       controller.qrcode.abort()
@@ -260,11 +380,13 @@
           getElement("web-check-button-pc").href = "https://wappass.baidu.com/wp/?qrlogin=&sign=" + sign
         }
 
-        switchActiveStatus("card-scan")
-        getStatus(1, sign)
       }).catch(() => switchActiveStatus("card-bduss-error"))
     }
 
+    const loadedQRCode = () => {
+      switchActiveStatus("card-scan")
+      getStatus(1, sign)
+    }
 
     const openAuthPage = () => {
       authPage = window.open('https://wappass.baidu.com/wp/?qrlogin&t=' + Math.ceil(Date.now() / 1000) + '&error=0&sign=' + sign + '&cmd=login&lp=pc&adapter=3', 'get-bduss:auth', 'width=' + window.innerWidth + ',height=' + window.innerHeight);
@@ -306,14 +428,16 @@
           return
         }
         if (response.data.status >= 0 && response.data.status < 2) {
-          if (response.data.status === 0) {
+          if (response.data.state === 'scanned') {
             switchActiveStatus("card-success")
+          } else if (response.data.state === 'waiting') {
+            switchActiveStatus("card-scan")
           }
           getStatus(response.data.status, sign)
-        } else if (response.data.status === -1) {
+        } else if (response.data.state === 'error') {
           sign = ''
           switchActiveStatus("card-bduss-error")
-        } else if (response.data.status === 2) {
+        } else if (response.data.state === 'success') {
           getElement("bduss-list").innerText = response.data.bduss
           if (callbackURL?.href) {
             switchActiveStatus("card-bduss-success-eta")
@@ -326,14 +450,14 @@
           } else {
             if (fullModeStatus && response.data.data) {
               //full mode
-              let htmlTemplate = `<ul style="text-align: start;">`
+              let htmlTemplate = `<ul style="text-align: start; max-width: 500px;">`
               for (const key in response.data.data) {
                 if (key === "stokenList") {
                   for (const stokenKey in response.data.data["stokenList"]) {
-                    htmlTemplate += `<li><span style="font-size: 1.1rem">stoken_${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all; font-weight: 300;">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
+                    htmlTemplate += `<li><span style="font-size: 1.1rem; font-weight: 600">stoken.${escapeHTML(stokenKey)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data.stokenList[stokenKey])}</span></li>`
                   }
                 } else {
-                  htmlTemplate += `<li><span style="font-size: 1.1rem">${escapeHTML(key)}</span>: <span style="user-select: all; word-break: break-all; font-weight: 300;">${escapeHTML(response.data.data[key])}</span></li>`
+                  htmlTemplate += `<li><span style="font-size: 1.1rem; font-weight: 600">${escapeHTML(key)}</span>: <span style="user-select: all; word-break: break-all;">${escapeHTML(response.data.data[key])}</span></li>`
                 }
               }
 
@@ -382,10 +506,12 @@
         if (callbackStoken) {
           fullMode()
         }
-        getElement("app-alert-link").innerText = hashCallback ? callbackURL.href.replace(callbackURL.search, '') : callbackURL.href.replace(callbackURL.hash, '')
+        getElement("app-alert-link").innerText = callbackURL.host
         getElement("app-alert-link").href = hashCallback ? callbackURL.href.replace(callbackURL.search, '') : callbackURL.href.replace(callbackURL.hash, '')
         getElement("app-alert").classList.remove("none")
-        getElement("app-alert").classList.add("block")
+        getElement("app-alert").classList.add("callback-link")
+        getElement("app-alert").classList.add("flex")
+
       } catch (error) {
         console.error(error)
       }
@@ -394,7 +520,7 @@
     const eta = (endTime, loaction) => {
       let now = new Date
       if (now < endTime) {
-        document.querySelector("#card-bduss-success-eta > h1").innerText = Math.floor((endTime - now) / 1000)
+        document.querySelector("#card-bduss-success-eta h1").innerText = Math.ceil((endTime - now) / 1000)
         setTimeout(() => eta(endTime, loaction), 200);
       } else {
         window.open(loaction, '_self')
@@ -423,11 +549,25 @@
 
     const switchMode = () => {
       fullMode()
-      getStatus(1, sign)
+      // getStatus(1, sign)
+      init()
+    }
+
+    const firstCallbackCheck = () => {
+      localStorage.setItem('callback-checked', '1')
+      switchActiveStatus("card-bduss-success")
+      init()
     }
 
     hashCheck(location.hash)
-    init()
+
+    // first user?
+    let isFirstUser = localStorage.getItem('callback-checked') !== '1'
+    if (callbackURL?.host && isFirstUser) {
+      switchActiveStatus("card-callback-check")
+    } else {
+      init()
+    }
   </script>
 </body>
 

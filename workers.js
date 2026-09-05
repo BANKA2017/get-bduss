@@ -11,7 +11,7 @@ const responseInit = (referrer = '*') => ({
 })
 
 const requestHeaders = new Headers({
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36"
 })
 
 // const callback = ''//"get_object_value_" + Date.now()
@@ -22,7 +22,8 @@ async function switchRouter(request, env) {
     let resp = {
         "errno": -1,
         "msg": "Forbidden",
-        "data": []
+        "data": [],
+        timestamp: Math.floor(Date.now()/1000)
     }
 
     // referrer
@@ -63,22 +64,33 @@ async function getqrcode() {
 }
 
 async function getBduss(sign, full = false) {
-    let resp = { status: 1, bduss: "", msg: "", fullmode: false }
+    let resp = { status: 1, state: 'error', bduss: "", msg: "", fullmode: false }
     let response = await (await fetch("https://passport.baidu.com/channel/unicast?channel_id=" + sign + "&callback=a", { headers: requestHeaders })).text()
     if (response) {
         const errno = parseInt(/"errno":([\-0-9]+)(?:,|})/.exec(response)[1])
         if (errno === 1) {
             resp.status = 1
+            resp.state = 'waiting'
+            resp.msg = "Keep waiting"
         } else if (errno === 0) {
             const channel_v = JSON.parse(/"channel_v":"(.*)"}\)/.exec(response)[1].replace(/\\/gm, ''))
             if (channel_v.status) {
                 resp.status = 0
-                resp.msg = "Continue"
+                if (channel_v.status === 1) {
+                    resp.state = 'scanned'
+                    resp.msg = "Scanned"
+                } else if (channel_v.status === 2) {
+                    resp.state = 'waiting'
+                    resp.msg = "Back to waiting"
+                } else {
+                    resp.msg = "Unknown status: " + channel_v.status
+                }
             } else {
                 const userData = await JSON.parse(((await (await fetch('https://passport.baidu.com/v3/login/main/qrbdusslogin?bduss=' + channel_v.v, { headers: requestHeaders })).text()).replace(/'([^'']+)'/gm, `"$1"`)).replace(/\\&/gm, "&"))
 
                 if (userData && userData.code === "110000") {
                     resp.status = 2
+                    resp.state = 'success'
                     resp.msg = "Success"
                     resp.bduss = userData.data.session.bduss
                     if (full) {
